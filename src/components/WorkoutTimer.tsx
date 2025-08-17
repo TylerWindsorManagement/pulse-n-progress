@@ -9,16 +9,16 @@ import { useToast } from '@/hooks/use-toast';
 export interface Exercise {
   id: number;
   name: string;
-  duration: number; // in seconds
+  duration: number; // in minutes
   status: 'waiting' | 'active' | 'ready' | 'completed';
-  timeRemaining: number;
+  timeRemaining: number; // in seconds
 }
 
 const WorkoutTimer = () => {
   const [exercises, setExercises] = useState<Exercise[]>([
-    { id: 1, name: 'Push-ups', duration: 30, status: 'waiting', timeRemaining: 30 },
-    { id: 2, name: 'Squats', duration: 45, status: 'waiting', timeRemaining: 45 },
-    { id: 3, name: 'Plank', duration: 60, status: 'waiting', timeRemaining: 60 },
+    { id: 1, name: '', duration: 0, status: 'waiting', timeRemaining: 0 },
+    { id: 2, name: '', duration: 0, status: 'waiting', timeRemaining: 0 },
+    { id: 3, name: '', duration: 0, status: 'waiting', timeRemaining: 0 },
   ]);
   const [isSetupMode, setIsSetupMode] = useState(true);
   const [isTimerActive, setIsTimerActive] = useState(false);
@@ -61,20 +61,24 @@ const WorkoutTimer = () => {
         ? { 
             ...ex, 
             [field]: field === 'duration' ? parseInt(value) || 0 : value,
-            timeRemaining: field === 'duration' ? parseInt(value) || 0 : ex.timeRemaining
+            timeRemaining: field === 'duration' ? (parseInt(value) || 0) * 60 : ex.timeRemaining
           }
         : ex
     ));
   };
 
   const startTimer = () => {
-    const firstExercise = exercises[0];
-    if (firstExercise) {
-      setExercises(prev => prev.map((ex, index) => ({
-        ...ex,
-        status: index === 0 ? 'active' : 'waiting',
-        timeRemaining: ex.duration
-      })));
+    const validExercises = exercises.filter(ex => ex.name.trim() && ex.duration > 0);
+    if (validExercises.length > 0) {
+      setExercises(prev => prev.map((ex, index) => {
+        const isValid = ex.name.trim() && ex.duration > 0;
+        const validIndex = validExercises.findIndex(valid => valid.id === ex.id);
+        return {
+          ...ex,
+          status: isValid && validIndex === 0 ? 'active' : 'waiting',
+          timeRemaining: ex.duration * 60 // convert minutes to seconds
+        };
+      }));
       setIsSetupMode(false);
       setIsTimerActive(true);
     }
@@ -83,14 +87,21 @@ const WorkoutTimer = () => {
   const completeExercise = (id: number) => {
     setExercises(prev => {
       const updated = [...prev];
-      const currentIndex = updated.findIndex(ex => ex.id === id);
-      const nextIndex = currentIndex + 1;
+      const validExercises = updated.filter(ex => ex.name.trim() && ex.duration > 0);
+      const currentIndex = validExercises.findIndex(ex => ex.id === id);
+      const nextExercise = validExercises[currentIndex + 1];
       
-      if (currentIndex !== -1) {
-        updated[currentIndex].status = 'completed';
-        updated[currentIndex].timeRemaining = updated[currentIndex].duration;
-        
-        if (nextIndex < updated.length) {
+      // Mark current as completed
+      const exerciseIndex = updated.findIndex(ex => ex.id === id);
+      if (exerciseIndex !== -1) {
+        updated[exerciseIndex].status = 'completed';
+        updated[exerciseIndex].timeRemaining = updated[exerciseIndex].duration * 60;
+      }
+      
+      // Start next exercise if exists
+      if (nextExercise) {
+        const nextIndex = updated.findIndex(ex => ex.id === nextExercise.id);
+        if (nextIndex !== -1) {
           updated[nextIndex].status = 'active';
         }
       }
@@ -103,7 +114,7 @@ const WorkoutTimer = () => {
     setExercises(prev => prev.map(ex => ({
       ...ex,
       status: 'waiting',
-      timeRemaining: ex.duration
+      timeRemaining: ex.duration * 60 // convert minutes to seconds
     })));
     setIsSetupMode(true);
     setIsTimerActive(false);
@@ -132,7 +143,7 @@ const WorkoutTimer = () => {
                   className="text-sm"
                   min="1"
                 />
-                <span className="text-sm text-muted-foreground">seconds</span>
+                <span className="text-sm text-muted-foreground">minutes</span>
               </div>
             </div>
           ))}
@@ -157,13 +168,15 @@ const WorkoutTimer = () => {
           Reset
         </Button>
       </div>
-      {exercises.map((exercise) => (
-        <TimerBar
-          key={exercise.id}
-          exercise={exercise}
-          onComplete={() => completeExercise(exercise.id)}
-        />
-      ))}
+      {exercises
+        .filter(exercise => exercise.name.trim() && exercise.duration > 0)
+        .map((exercise) => (
+          <TimerBar
+            key={exercise.id}
+            exercise={exercise}
+            onComplete={() => completeExercise(exercise.id)}
+          />
+        ))}
     </div>
   );
 };

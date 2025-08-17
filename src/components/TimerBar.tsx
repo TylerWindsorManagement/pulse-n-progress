@@ -30,9 +30,10 @@ export const TimerBar: React.FC<TimerBarProps> = ({ exercise, onComplete }) => {
   const getProgressWidth = () => {
     if (exercise.status === 'ready') return '100%';
     if (exercise.status === 'completed') return '100%';
-    if (exercise.duration === 0) return '0%';
+    const totalSeconds = exercise.duration * 60; // convert minutes to seconds
+    if (totalSeconds === 0) return '0%';
     
-    const progress = ((exercise.duration - exercise.timeRemaining) / exercise.duration) * 100;
+    const progress = ((totalSeconds - exercise.timeRemaining) / totalSeconds) * 100;
     return `${Math.max(0, Math.min(100, progress))}%`;
   };
 
