@@ -72,7 +72,7 @@ const WorkoutTimer = () => {
         const isValid = ex.name.trim() && ex.duration > 0;
         return {
           ...ex,
-          status: isValid ? 'active' : 'waiting', // Start all valid exercises at once
+          status: isValid ? 'ready' : 'waiting', // Start all valid exercises in ready state
           timeRemaining: ex.duration * 60 // convert minutes to seconds
         };
       }));
