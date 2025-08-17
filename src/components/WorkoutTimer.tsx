@@ -86,7 +86,7 @@ const WorkoutTimer = () => {
       ex.id === id 
         ? { 
             ...ex, 
-            status: 'completed',
+            status: 'active',
             timeRemaining: ex.duration * 60
           }
         : ex
