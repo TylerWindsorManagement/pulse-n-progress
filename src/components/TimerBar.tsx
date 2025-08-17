@@ -38,7 +38,7 @@ export const TimerBar: React.FC<TimerBarProps> = ({ exercise, onComplete }) => {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-md h-12 bg-timer-inactive transition-all duration-300">
+    <div className="relative overflow-hidden rounded h-6 bg-timer-inactive transition-all duration-300">
       {/* Progress bar background */}
       <div 
         className={`absolute inset-0 transition-all duration-1000 ease-out ${getBarClasses()}`}
@@ -46,10 +46,10 @@ export const TimerBar: React.FC<TimerBarProps> = ({ exercise, onComplete }) => {
       />
       
       {/* Content */}
-      <div className="relative flex items-center justify-between h-full px-3 z-10">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">{exercise.name}</span>
-          <span className="text-xs opacity-75">
+      <div className="relative flex items-center justify-between h-full px-2 z-10">
+        <div className="flex items-center gap-1 flex-1 min-w-0">
+          <span className="text-xs font-medium truncate">{exercise.name}</span>
+          <span className="text-xs opacity-75 font-mono">
             {formatTime(exercise.timeRemaining)}
           </span>
         </div>
@@ -59,14 +59,14 @@ export const TimerBar: React.FC<TimerBarProps> = ({ exercise, onComplete }) => {
             onClick={onComplete}
             size="sm"
             variant="secondary"
-            className="h-8 px-3 text-xs bg-white/90 text-black hover:bg-white"
+            className="h-4 px-1.5 text-xs bg-white/90 text-black hover:bg-white ml-1"
           >
             Done
           </Button>
         )}
         
         {exercise.status === 'active' && (
-          <div className="w-2 h-2 bg-current rounded-full animate-pulse" />
+          <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse ml-1" />
         )}
       </div>
     </div>

@@ -105,33 +105,33 @@ const WorkoutTimer = () => {
 
   if (isSetupMode) {
     return (
-      <Card className="w-80 p-6 bg-timer-background border-border">
-        <h2 className="text-lg font-semibold mb-4 text-foreground">Setup Your Workout</h2>
-        <div className="space-y-4">
+      <Card className="w-64 p-3 bg-timer-background border-border">
+        <h2 className="text-sm font-medium mb-3 text-foreground">Setup Workout</h2>
+        <div className="space-y-2">
           {exercises.map((exercise, index) => (
-            <div key={exercise.id} className="space-y-2">
-              <Label className="text-sm font-medium text-foreground">Exercise {index + 1}</Label>
+            <div key={exercise.id} className="space-y-1">
+              <Label className="text-xs text-foreground">Ex {index + 1}</Label>
               <Input
                 placeholder="Exercise name"
                 value={exercise.name}
                 onChange={(e) => handleExerciseChange(exercise.id, 'name', e.target.value)}
-                className="text-sm"
+                className="text-xs h-7"
               />
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <Input
                   type="number"
-                  placeholder="Duration"
+                  placeholder="Min"
                   value={exercise.duration}
                   onChange={(e) => handleExerciseChange(exercise.id, 'duration', e.target.value)}
-                  className="text-sm"
+                  className="text-xs h-7 w-16"
                   min="1"
                 />
-                <span className="text-sm text-muted-foreground">minutes</span>
+                <span className="text-xs text-muted-foreground">min</span>
               </div>
             </div>
           ))}
-          <Button onClick={startTimer} className="w-full mt-4">
-            Start Workout
+          <Button onClick={startTimer} className="w-full mt-3 h-7 text-xs">
+            Start
           </Button>
         </div>
       </Card>
@@ -139,14 +139,14 @@ const WorkoutTimer = () => {
   }
 
   return (
-    <div className="w-80 space-y-1 bg-timer-background p-3 rounded-lg border border-border">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-medium text-foreground">Workout Timer</h3>
+    <div className="w-64 space-y-0.5 bg-timer-background p-2 rounded-lg border border-border">
+      <div className="flex justify-between items-center mb-1">
+        <h3 className="text-xs font-medium text-foreground">Workout</h3>
         <Button 
           onClick={resetTimer} 
           variant="outline" 
           size="sm"
-          className="text-xs h-6 px-2"
+          className="text-xs h-5 px-1.5"
         >
           Reset
         </Button>
