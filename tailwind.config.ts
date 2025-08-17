@@ -61,7 +61,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				'timer-active': 'hsl(var(--timer-active))',
+				'timer-active-foreground': 'hsl(var(--timer-active-foreground))',
+				'timer-ready': 'hsl(var(--timer-ready))',
+				'timer-ready-foreground': 'hsl(var(--timer-ready-foreground))',
+				'timer-inactive': 'hsl(var(--timer-inactive))',
+				'timer-inactive-foreground': 'hsl(var(--timer-inactive-foreground))',
+				'timer-background': 'hsl(var(--timer-background))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
