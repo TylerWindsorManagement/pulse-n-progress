@@ -4,10 +4,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-2">VibeCode Workout Timer</h1>
-          <p className="text-muted-foreground">Stay active with micro-workouts during your coding sessions</p>
-        </div>
         
         <div className="flex justify-center">
           <WorkoutTimer />
