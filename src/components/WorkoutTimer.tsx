@@ -31,21 +31,19 @@ const WorkoutTimer = () => {
       interval = setInterval(() => {
         setExercises(prev => {
           const updated = [...prev];
-          const activeIndex = updated.findIndex(ex => ex.status === 'active');
           
-          if (activeIndex !== -1) {
-            const activeExercise = updated[activeIndex];
-            if (activeExercise.timeRemaining > 0) {
-              activeExercise.timeRemaining -= 1;
-            } else {
-              activeExercise.status = 'ready';
+          updated.forEach((exercise, index) => {
+            if (exercise.status === 'active' && exercise.timeRemaining > 0) {
+              exercise.timeRemaining -= 1;
+            } else if (exercise.status === 'active' && exercise.timeRemaining === 0) {
+              exercise.status = 'ready';
               toast({
-                title: `${activeExercise.name} is ready!`,
+                title: `${exercise.name} is ready!`,
                 description: "Time to exercise! Click the button when done.",
                 variant: "default",
               });
             }
-          }
+          });
           
           return updated;
         });
@@ -70,12 +68,11 @@ const WorkoutTimer = () => {
   const startTimer = () => {
     const validExercises = exercises.filter(ex => ex.name.trim() && ex.duration > 0);
     if (validExercises.length > 0) {
-      setExercises(prev => prev.map((ex, index) => {
+      setExercises(prev => prev.map(ex => {
         const isValid = ex.name.trim() && ex.duration > 0;
-        const validIndex = validExercises.findIndex(valid => valid.id === ex.id);
         return {
           ...ex,
-          status: isValid && validIndex === 0 ? 'active' : 'waiting',
+          status: isValid ? 'active' : 'waiting', // Start all valid exercises at once
           timeRemaining: ex.duration * 60 // convert minutes to seconds
         };
       }));
@@ -85,29 +82,15 @@ const WorkoutTimer = () => {
   };
 
   const completeExercise = (id: number) => {
-    setExercises(prev => {
-      const updated = [...prev];
-      const validExercises = updated.filter(ex => ex.name.trim() && ex.duration > 0);
-      const currentIndex = validExercises.findIndex(ex => ex.id === id);
-      const nextExercise = validExercises[currentIndex + 1];
-      
-      // Mark current as completed
-      const exerciseIndex = updated.findIndex(ex => ex.id === id);
-      if (exerciseIndex !== -1) {
-        updated[exerciseIndex].status = 'completed';
-        updated[exerciseIndex].timeRemaining = updated[exerciseIndex].duration * 60;
-      }
-      
-      // Start next exercise if exists
-      if (nextExercise) {
-        const nextIndex = updated.findIndex(ex => ex.id === nextExercise.id);
-        if (nextIndex !== -1) {
-          updated[nextIndex].status = 'active';
-        }
-      }
-      
-      return updated;
-    });
+    setExercises(prev => prev.map(ex => 
+      ex.id === id 
+        ? { 
+            ...ex, 
+            status: 'completed',
+            timeRemaining: ex.duration * 60
+          }
+        : ex
+    ));
   };
 
   const resetTimer = () => {
