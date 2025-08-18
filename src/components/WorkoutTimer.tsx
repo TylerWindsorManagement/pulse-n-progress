@@ -37,11 +37,6 @@ const WorkoutTimer = () => {
               exercise.timeRemaining -= 1;
             } else if (exercise.status === 'active' && exercise.timeRemaining === 0) {
               exercise.status = 'ready';
-              toast({
-                title: `${exercise.name} is ready!`,
-                description: "Time to exercise! Click the button when done.",
-                variant: "default",
-              });
             }
           });
           
